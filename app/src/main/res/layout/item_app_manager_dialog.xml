@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:background="@drawable/bg_popup"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/btn_app_manager_popup_startup"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="启动"
+        android:background="@drawable/bg_btn"
+        />
+
+    <Button
+        android:id="@+id/btn_app_manager_popup_uninstall"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_btn"
+        android:text="卸载"
+        />
+
+    <Button
+        android:id="@+id/btn_app_manager_popup_share"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_btn"
+        android:text="分享"
+        />
+
+
+</LinearLayout>
