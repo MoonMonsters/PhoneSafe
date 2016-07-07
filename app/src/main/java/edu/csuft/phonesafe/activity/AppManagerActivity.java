@@ -20,8 +20,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -33,6 +31,8 @@ import edu.csuft.phonesafe.R;
 import edu.csuft.phonesafe.adapter.AppManagerAdapter;
 import edu.csuft.phonesafe.base.BaseActivity;
 import edu.csuft.phonesafe.bean.AppManagerInfo;
+import edu.csuft.phonesafe.helper.ViewHelper;
+import edu.csuft.phonesafe.utils.Config;
 
 /**
  * 软件管理界面
@@ -41,10 +41,6 @@ public class AppManagerActivity extends BaseActivity {
 
     @Bind(R.id.lv_app_manager)
     ListView lv_app_manager;
-    @Bind(R.id.pb_app_manager)
-    ProgressBar pb_app_manager;
-    @Bind(R.id.tv_app_manager_progress)
-    TextView tv_app_manager_progress;
 
     private PopupWindow popupWindow;
 
@@ -54,11 +50,8 @@ public class AppManagerActivity extends BaseActivity {
     private ArrayList<AppManagerInfo> userAppList = null;
     /** 应用程序管理适配器 */
     private AppManagerAdapter appManagerAdapter = null;
-
-    /** 加载完成 */
-    public static final int SUCCESS_LOAD = 0;
-    /** 进度条的值 */
-    public static final int PROGRESS_VALUE = 1;
+    /** 帮助类，用来显示加载数据时的进度条 */
+    private ViewHelper viewHelper = null;
 
     /** 判断当前显示的是系统应用程序还是用户应用程序 */
     private boolean isUserAppList = true;
@@ -67,13 +60,19 @@ public class AppManagerActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case SUCCESS_LOAD:
+                case Config.SUCCESS_LOAD:
+                    //排序
                     sortByAppName();
+                    //显示app
                     showAppInfo();
+                    //隐藏进度条
+                    viewHelper.hiddenPbAndTv();
                     break;
-                case PROGRESS_VALUE:
-                    String value = (String) msg.obj;
-                    tv_app_manager_progress.setText(value);
+                case Config.UPDATE_PROGRESS:
+                    //更新进度条
+                    viewHelper.updateProgressBarValue();
+                    //更新TextView的进度条的值
+                    viewHelper.updateTextViewValue();
                     break;
             }
         }
@@ -87,6 +86,7 @@ public class AppManagerActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        viewHelper = new ViewHelper(this);
         systemAppList = new ArrayList<>();
         userAppList = new ArrayList<>();
         new AppManagerThread().start();
@@ -112,9 +112,7 @@ public class AppManagerActivity extends BaseActivity {
             List<ApplicationInfo> applications = pm.getInstalledApplications(PackageManager.GET_META_DATA |
                     PackageManager.GET_SHARED_LIBRARY_FILES);
             // 设置最大值为所用应用程序的值
-            pb_app_manager.setMax(applications.size());
-            //从0开始
-            pb_app_manager.setProgress(0);
+            viewHelper.setPbMaxValue(applications.size());
             for(ApplicationInfo info : applications){
                 //应用图标
                 Drawable appIcon = info.loadIcon(pm);
@@ -142,24 +140,16 @@ public class AppManagerActivity extends BaseActivity {
                 }
 
                 //发送消息，应用加载完成一个
-                pb_app_manager.setProgress(pb_app_manager.getProgress() + 1);
                 Message msg = handler.obtainMessage();
-                msg.what = PROGRESS_VALUE;
-                msg.obj = setProgressValue();
+                msg.what = Config.UPDATE_PROGRESS;
                 handler.sendMessage(msg);
             }
 
             //发送消息，应用加载完毕
             Message msg = handler.obtainMessage();
-            msg.what = SUCCESS_LOAD;
+            msg.what = Config.SUCCESS_LOAD;
             handler.sendMessage(msg);
         }
-    }
-
-    /** 设置TextView上显示的Progress进度条的值 */
-    private String setProgressValue(){
-
-        return pb_app_manager.getProgress() + "/" + pb_app_manager.getMax();
     }
 
     @Override
@@ -181,8 +171,6 @@ public class AppManagerActivity extends BaseActivity {
     /** 显示应用程序在界面上 */
     private void showAppInfo() {
 
-        hiddenPbAndTv();
-
         if(!isUserAppList){
             appManagerAdapter = new AppManagerAdapter(this,systemAppList);
             Toast.makeText(this,"现在显示的是系统应用程序",Toast.LENGTH_SHORT).show();
@@ -194,12 +182,6 @@ public class AppManagerActivity extends BaseActivity {
         lv_app_manager.setAdapter(appManagerAdapter);
 
         isUserAppList = !isUserAppList;
-    }
-
-    /** 在加载完成后，隐藏进度条和文字提示 */
-    private void hiddenPbAndTv() {
-        pb_app_manager.setVisibility(View.GONE);
-        tv_app_manager_progress.setVisibility(View.GONE);
     }
 
     /** 判断应用程序是否是用户程序 */

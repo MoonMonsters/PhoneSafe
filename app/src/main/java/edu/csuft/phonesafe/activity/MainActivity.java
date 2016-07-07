@@ -34,6 +34,12 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.gv_main_function)
     GridView gv_main_function;
 
+    /** 应用管理 */
+    public static final int YING_YONG_GUAN_LI = 0;
+    /** 流量查看 */
+    public static final int LIU_LIANG_CHA_KAN = 2;
+    /** 手机杀毒 */
+    public static final int SHOU_JI_SHA_DU = 3;
     private ArrayList<FunctionInfo> functionInfoList = null;
     private MainFunctionAdapter functionAdapter = null;
 
@@ -134,8 +140,14 @@ public class MainActivity extends BaseActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = null;
             switch (position){
-                case 0: //应用管理
+                case YING_YONG_GUAN_LI: //应用管理
                     intent = new Intent(MainActivity.this, AppManagerActivity.class);
+                    break;
+                case LIU_LIANG_CHA_KAN:
+                    intent = new Intent(MainActivity.this,TrafficActivity.class);
+                    break;
+                case SHOU_JI_SHA_DU:
+                    intent = new Intent(MainActivity.this, VirusActivity.class);
                     break;
             }
 

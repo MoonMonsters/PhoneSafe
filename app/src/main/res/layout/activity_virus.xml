@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.csuft.phonesafe.activity.VirusActivity">
+
+    <ImageView
+        android:id="@+id/iv_virus_anim"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@drawable/scan_1"
+        />
+
+    <ProgressBar
+        android:id="@+id/pb_virus"
+        android:layout_below="@id/iv_virus_anim"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal" />
+
+    <Button
+        android:id="@+id/btn_virus_start"
+        android:text="开始扫描"
+        style="@style/virusBtn"
+        />
+
+    <Button
+        android:id="@+id/btn_virus_stop"
+        android:text="停止"
+        android:visibility="gone"
+        style="@style/virusBtn"
+        />
+
+    <Button
+        android:id="@+id/btn_virus_kill"
+        android:text="卸载病毒软件"
+        style="@style/virusBtn"
+        android:visibility="gone"
+        />
+
+    <ListView
+        android:id="@+id/lv_virus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pb_virus"
+        android:layout_marginBottom="50dp"
+        />
+
+</RelativeLayout>
