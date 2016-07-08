@@ -40,6 +40,9 @@ public class MainActivity extends BaseActivity {
     public static final int LIU_LIANG_CHA_KAN = 2;
     /** 手机杀毒 */
     public static final int SHOU_JI_SHA_DU = 3;
+    /** 任务管理 */
+    public static final int REN_WU_GUAN_LI = 1;
+
     private ArrayList<FunctionInfo> functionInfoList = null;
     private MainFunctionAdapter functionAdapter = null;
 
@@ -148,6 +151,9 @@ public class MainActivity extends BaseActivity {
                     break;
                 case SHOU_JI_SHA_DU:
                     intent = new Intent(MainActivity.this, VirusActivity.class);
+                    break;
+                case REN_WU_GUAN_LI:
+                    intent = new Intent(MainActivity.this, TaskActivity.class);
                     break;
             }
 

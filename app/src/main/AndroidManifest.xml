@@ -44,7 +44,10 @@
         <activity
             android:name=".activity.TrafficActivity"
             android:label="流量查看" />
-        <activity android:name=".activity.VirusActivity"></activity>
+        <activity android:name=".activity.VirusActivity" />
+        <activity android:name=".activity.TaskActivity"
+            android:label="任务管理"
+            ></activity>
     </application>
 
 </manifest>
