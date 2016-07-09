@@ -16,12 +16,12 @@ import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
-import edu.csuft.phonesafe.R;
 import edu.csuft.phonesafe.base.BaseActivity;
 import edu.csuft.phonesafe.bean.AppManagerInfo;
 import edu.csuft.phonesafe.fragment.AppManagerFragment;
 import edu.csuft.phonesafe.helper.ViewHelper;
 import edu.csuft.phonesafe.utils.Config;
+import edu.csuft.phonesafe.R;
 
 /**
  * 软件管理界面

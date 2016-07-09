@@ -15,11 +15,11 @@ import java.util.TimerTask;
 
 import butterknife.Bind;
 import edu.csuft.phonesafe.adapter.MainFunctionAdapter;
-import edu.csuft.phonesafe.R;
 import edu.csuft.phonesafe.base.BaseActivity;
 import edu.csuft.phonesafe.bean.FunctionInfo;
 import edu.csuft.phonesafe.utils.StorageUtil;
 import edu.csuft.phonesafe.view.ArcProgress;
+import edu.csuft.phonesafe.R;
 
 public class MainActivity extends BaseActivity {
 
@@ -34,24 +34,36 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.gv_main_function)
     GridView gv_main_function;
 
-    /** 应用管理 */
+    /**
+     * 应用管理
+     */
     public static final int YING_YONG_GUAN_LI = 0;
-    /** 流量查看 */
+    /**
+     * 流量查看
+     */
     public static final int LIU_LIANG_CHA_KAN = 2;
-    /** 手机杀毒 */
+    /**
+     * 手机杀毒
+     */
     public static final int SHOU_JI_SHA_DU = 3;
-    /** 任务管理 */
+    /**
+     * 任务管理
+     */
     public static final int REN_WU_GUAN_LI = 1;
+    /**
+     * 垃圾清理
+     */
+    public static final int LA_JI_QING_LI = 4;
 
     private ArrayList<FunctionInfo> functionInfoList = null;
     private MainFunctionAdapter functionAdapter = null;
 
     public static final int REFRESH_DISPLAY = 0;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case REFRESH_DISPLAY:
                     initRomData();
                     initRamData();
@@ -72,7 +84,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initData() {
         Timer timer = new Timer();
-        timer.schedule(timerTask,0,2000);
+        timer.schedule(timerTask, 0, 2000);
         initFunctionData();
     }
 
@@ -112,18 +124,20 @@ public class MainActivity extends BaseActivity {
         arc_main_ram.setProgress(progress);
     }
 
-    /** 初始化GridView的数据信息 */
+    /**
+     * 初始化GridView的数据信息
+     */
     private void initFunctionData() {
-        String text[] = {"应用管理", "任务管理", "流量查看", "手机杀毒"};
+        String text[] = {"应用管理", "任务管理", "流量查看", "手机杀毒", "垃圾清理"};
         int imgId[] = {R.drawable.ic_main_ruanjian, R.drawable.ic_main_renwu,
-                R.drawable.ic_main_liuliang, R.drawable.ic_main_bingdu};
+                R.drawable.ic_main_liuliang, R.drawable.ic_main_bingdu, R.drawable.ic_main_laji};
 
         functionInfoList = new ArrayList<>();
-        for(int i=0; i<text.length; i++){
-            FunctionInfo info = new FunctionInfo(imgId[i],text[i]);
+        for (int i = 0; i < text.length; i++) {
+            FunctionInfo info = new FunctionInfo(imgId[i], text[i]);
             functionInfoList.add(info);
         }
-        functionAdapter = new MainFunctionAdapter(this,functionInfoList);
+        functionAdapter = new MainFunctionAdapter(this, functionInfoList);
         gv_main_function.setAdapter(functionAdapter);
     }
 
@@ -137,23 +151,28 @@ public class MainActivity extends BaseActivity {
         return R.layout.activity_main;
     }
 
-    /** GridView的点击事件 */
+    /**
+     * GridView的点击事件
+     */
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = null;
-            switch (position){
+            switch (position) {
                 case YING_YONG_GUAN_LI: //应用管理
                     intent = new Intent(MainActivity.this, AppManagerActivity.class);
                     break;
-                case LIU_LIANG_CHA_KAN:
-                    intent = new Intent(MainActivity.this,TrafficActivity.class);
+                case LIU_LIANG_CHA_KAN: //流量查看
+                    intent = new Intent(MainActivity.this, TrafficActivity.class);
                     break;
-                case SHOU_JI_SHA_DU:
+                case SHOU_JI_SHA_DU:    //手机杀毒
                     intent = new Intent(MainActivity.this, VirusActivity.class);
                     break;
-                case REN_WU_GUAN_LI:
+                case REN_WU_GUAN_LI:    //任务管理
                     intent = new Intent(MainActivity.this, TaskActivity.class);
+                    break;
+                case LA_JI_QING_LI:     //垃圾清理
+                    intent = new Intent(MainActivity.this, CCleanerActivity.class);
                     break;
             }
 
