@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_item_ccleaner_parent_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="15sp"
+        android:gravity="left"
+        android:text="垃圾清理" />
+
+    <TextView
+        android:id="@+id/tv_item_ccleaner_parent_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3.00MB" />
+
+    <ImageView
+        android:id="@+id/iv_item_ccleaner_parent_select"
+        android:layout_marginLeft="10dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/ic_true"
+        />
+
+</LinearLayout>
