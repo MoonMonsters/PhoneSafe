@@ -55,6 +55,7 @@ public class TaskActivity extends BaseActivity {
 
     @Override
     public void initData() {
+
         pm = getPackageManager();
         am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         runningAppProcesses = am.getRunningAppProcesses();

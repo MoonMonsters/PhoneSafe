@@ -16,18 +16,17 @@ import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
+import edu.csuft.phonesafe.R;
 import edu.csuft.phonesafe.base.BaseActivity;
 import edu.csuft.phonesafe.bean.AppManagerInfo;
 import edu.csuft.phonesafe.fragment.AppManagerFragment;
 import edu.csuft.phonesafe.helper.ViewHelper;
 import edu.csuft.phonesafe.utils.Config;
-import edu.csuft.phonesafe.R;
 
 /**
  * 软件管理界面
  */
 public class AppManagerActivity extends BaseActivity {
-
     /** 存储系统应用程序集合 */
     private ArrayList<AppManagerInfo> systemAppList = null;
     /** 存储用户应用程序集合 */
@@ -64,6 +63,7 @@ public class AppManagerActivity extends BaseActivity {
     };
 
     private void showAppInfo(){
+
         fragmentList.add(AppManagerFragment.getInstance(userAppList,true));
         fragmentList.add(AppManagerFragment.getInstance(systemAppList,false));
         vp_app_manager.setAdapter(fragmentPagerAdapter);
@@ -97,6 +97,7 @@ public class AppManagerActivity extends BaseActivity {
     private class AppManagerThread extends Thread{
         @Override
         public void run() {
+
             //得到包管理器
             PackageManager pm = getPackageManager();
 
@@ -112,6 +113,7 @@ public class AppManagerActivity extends BaseActivity {
                 CharSequence appName = info.loadLabel(pm);
                 //应用包名
                 String packageName = info.packageName;
+
                 PackageInfo packageInfo;
                 String versionName = null;
                 try {
@@ -169,6 +171,7 @@ public class AppManagerActivity extends BaseActivity {
         } else if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
             return true;
         }
+
         return false;
     }
 }

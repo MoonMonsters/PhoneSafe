@@ -1,4 +1,4 @@
-/* //device/java/android/android/view/WindowManager.aidl
+/*
 **
 ** Copyright 2007, The Android Open Source Project
 **
@@ -14,5 +14,17 @@
 ** See the License for the specific language governing permissions and
 ** limitations under the License.
 */
-package  android.content.pm;
-parcelable PackageStats;
+
+package android.content.pm;
+
+import android.content.pm.PackageStats;
+/**
+ * API for package data change related callbacks from the Package Manager.
+ * Some usage scenarios include deletion of cache directory, generate
+ * statistics related to code, data, cache usage(TODO)
+ * {@hide}
+ */
+interface IPackageStatsObserver {
+    
+    void onGetStatsCompleted(in PackageStats pStats, boolean succeeded);
+}

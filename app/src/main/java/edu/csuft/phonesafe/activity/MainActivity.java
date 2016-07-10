@@ -14,12 +14,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.Bind;
+import edu.csuft.phonesafe.R;
 import edu.csuft.phonesafe.adapter.MainFunctionAdapter;
 import edu.csuft.phonesafe.base.BaseActivity;
 import edu.csuft.phonesafe.bean.FunctionInfo;
 import edu.csuft.phonesafe.utils.StorageUtil;
 import edu.csuft.phonesafe.view.ArcProgress;
-import edu.csuft.phonesafe.R;
 
 public class MainActivity extends BaseActivity {
 
@@ -81,11 +81,21 @@ public class MainActivity extends BaseActivity {
         }
     };
 
+    private  long size = 0;
+
     @Override
     public void initData() {
         Timer timer = new Timer();
         timer.schedule(timerTask, 0, 2000);
         initFunctionData();
+
+        /*
+        /data/user/0/edu.csuft.phonesafe/cache
+         */
+        /*
+        data/data/packageName/cache-files--lib--app_img
+         */
+
     }
 
     /**
