@@ -9,7 +9,6 @@
     </style>
 
     <style name="virusBtn" >
-
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:background">@drawable/bg_btn</item>
         <item name="android:layout_marginLeft">20dp</item>

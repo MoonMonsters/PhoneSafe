@@ -54,6 +54,10 @@ public class MainActivity extends BaseActivity {
      * 垃圾清理
      */
     public static final int LA_JI_QING_LI = 4;
+    /**
+     * 设置中心
+     */
+    public static final int SHE_ZHI_ZHONG_XIN = 5;
 
     private ArrayList<FunctionInfo> functionInfoList = null;
     private MainFunctionAdapter functionAdapter = null;
@@ -138,9 +142,9 @@ public class MainActivity extends BaseActivity {
      * 初始化GridView的数据信息
      */
     private void initFunctionData() {
-        String text[] = {"应用管理", "任务管理", "流量查看", "手机杀毒", "垃圾清理"};
+        String text[] = {"应用管理", "任务管理", "流量查看", "手机杀毒", "垃圾清理","设置中心"};
         int imgId[] = {R.drawable.ic_main_ruanjian, R.drawable.ic_main_renwu,
-                R.drawable.ic_main_liuliang, R.drawable.ic_main_bingdu, R.drawable.ic_main_laji};
+                R.drawable.ic_main_liuliang, R.drawable.ic_main_bingdu, R.drawable.ic_main_laji,R.drawable.ic_setting};
 
         functionInfoList = new ArrayList<>();
         for (int i = 0; i < text.length; i++) {
@@ -183,6 +187,9 @@ public class MainActivity extends BaseActivity {
                     break;
                 case LA_JI_QING_LI:     //垃圾清理
                     intent = new Intent(MainActivity.this, CCleanerActivity.class);
+                    break;
+                case SHE_ZHI_ZHONG_XIN:
+                    intent = new Intent(MainActivity.this,SettingActivity.class);
                     break;
             }
 

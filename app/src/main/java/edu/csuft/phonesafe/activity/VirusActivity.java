@@ -185,6 +185,7 @@ public class VirusActivity extends BaseActivity {
     private class KillVirusThread extends Thread{
         @Override
         public void run() {
+            virusAppInfoList.clear();
             //得到手机中所有的app
             List<PackageInfo> packageInfoList = pm.getInstalledPackages(PackageManager.GET_SIGNATURES);
             //设置最大值
@@ -193,6 +194,8 @@ public class VirusActivity extends BaseActivity {
 
                 //如果点击停止按钮，则终止扫描
                 if(!isRunning){
+                    virusAppInfoList.clear();
+                    existVirusList.clear();
                     break;
                 }
 
@@ -275,14 +278,13 @@ public class VirusActivity extends BaseActivity {
         hiddenBtnStop();
         showBtnStart();
         virusAppInfoList.clear();
+        existVirusList.clear();
         virusAdapter.notifyDataSetChanged();
     }
 
     /** 开始扫描手机中的app */
     private void startScanVirus() {
         pb_virus.setProgress(0);
-        virusAppInfoList.clear();
-        existVirusList.clear();
         startAnim();
         hiddenBtnStart();
         showBtnStop();

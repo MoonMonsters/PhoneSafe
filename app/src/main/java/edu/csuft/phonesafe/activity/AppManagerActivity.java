@@ -27,11 +27,17 @@ import edu.csuft.phonesafe.utils.Config;
  * 软件管理界面
  */
 public class AppManagerActivity extends BaseActivity {
-    /** 存储系统应用程序集合 */
+    /**
+     * 存储系统应用程序集合
+     */
     private ArrayList<AppManagerInfo> systemAppList = null;
-    /** 存储用户应用程序集合 */
+    /**
+     * 存储用户应用程序集合
+     */
     private ArrayList<AppManagerInfo> userAppList = null;
-    /** 帮助类，用来显示加载数据时的进度条 */
+    /**
+     * 帮助类，用来显示加载数据时的进度条
+     */
     private ViewHelper viewHelper = null;
     private ArrayList<Fragment> fragmentList = null;
 
@@ -40,10 +46,10 @@ public class AppManagerActivity extends BaseActivity {
     @Bind(R.id.vp_app_manager)
     ViewPager vp_app_manager;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case Config.SUCCESS_LOAD:
                     //排序
                     sortByAppName();
@@ -62,15 +68,17 @@ public class AppManagerActivity extends BaseActivity {
         }
     };
 
-    private void showAppInfo(){
+    private void showAppInfo() {
 
-        fragmentList.add(AppManagerFragment.getInstance(userAppList,true));
-        fragmentList.add(AppManagerFragment.getInstance(systemAppList,false));
+        fragmentList.add(AppManagerFragment.getInstance(userAppList, true));
+        fragmentList.add(AppManagerFragment.getInstance(systemAppList, false));
         vp_app_manager.setAdapter(fragmentPagerAdapter);
         tl_app_manager.setupWithViewPager(vp_app_manager);
     }
 
-    /** 按应用程序的首字母进行排序 */
+    /**
+     * 按应用程序的首字母进行排序
+     */
     private void sortByAppName() {
         Collections.sort(systemAppList);
         Collections.sort(userAppList);
@@ -94,7 +102,7 @@ public class AppManagerActivity extends BaseActivity {
         return R.layout.activity_app_manager;
     }
 
-    private class AppManagerThread extends Thread{
+    private class AppManagerThread extends Thread {
         @Override
         public void run() {
 
@@ -106,7 +114,7 @@ public class AppManagerActivity extends BaseActivity {
                     PackageManager.GET_SHARED_LIBRARY_FILES);
             // 设置最大值为所用应用程序的值
             viewHelper.setPbMaxValue(applications.size());
-            for(ApplicationInfo info : applications){
+            for (ApplicationInfo info : applications) {
                 //应用图标
                 Drawable appIcon = info.loadIcon(pm);
                 //应用名称
@@ -118,18 +126,19 @@ public class AppManagerActivity extends BaseActivity {
                 String versionName = null;
                 try {
                     packageInfo = pm.getPackageInfo(packageName, 0);
+
                     //应用版本号
                     versionName = packageInfo.versionName;
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
 
-                AppManagerInfo appManagerInfo = new AppManagerInfo(appIcon,(String)appName,
-                        versionName,packageName);
+                AppManagerInfo appManagerInfo = new AppManagerInfo(appIcon, (String) appName,
+                        versionName, packageName);
                 //判断是不是用户程序
-                if(isUserApp(info)){
+                if (isUserApp(info)) {
                     userAppList.add(appManagerInfo);
-                }else{
+                } else {
                     systemAppList.add(appManagerInfo);
                 }
 
@@ -147,22 +156,27 @@ public class AppManagerActivity extends BaseActivity {
     }
 
     FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
-        String[] titles = {"用户应用","系统应用"};
+        String[] titles = {"用户应用", "系统应用"};
+
         @Override
         public Fragment getItem(int position) {
             return fragmentList.get(position);
         }
+
         @Override
         public int getCount() {
             return fragmentList.size();
         }
+
         @Override
         public CharSequence getPageTitle(int position) {
             return titles[position];
         }
     };
 
-    /** 判断应用程序是否是用户程序 */
+    /**
+     * 判断应用程序是否是用户程序
+     */
     private boolean isUserApp(ApplicationInfo info) {
         //原来是系统应用，用户手动升级
         if ((info.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {

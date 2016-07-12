@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="联网设置">
+        <SwitchPreference
+            android:key="key_switch_autoUpdate"
+            android:summaryOff="关"
+            android:summaryOn="开"
+            android:title="自动更新" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="缓存设置">
+        <Preference
+            android:key="key_preference_clear_cache"
+            android:summary="清除本软件的缓存数据"
+            android:title="清除缓存" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

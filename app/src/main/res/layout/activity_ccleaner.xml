@@ -1,17 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="edu.csuft.phonesafe.activity.CCleanerActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:background="@android:color/holo_blue_light">
+
+        <TextView
+            android:id="@+id/tv_ccleaner_file_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="300"
+            android:textSize="50sp" />
+
+        <TextView
+            android:id="@+id/tv_ccleaner_file_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/tv_ccleaner_file_size"
+            android:text="GB" />
+
+        <edu.csuft.phonesafe.view.MarqueeText
+            android:id="@+id/tv_cleaner_file_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_ccleaner_file_size"
+            android:gravity="center"
+            android:ellipsize="marquee"
+            android:focusableInTouchMode="true"
+            android:singleLine="true"
+            android:text="正在扫描..." />
+    </RelativeLayout>
 
     <ExpandableListView
         android:id="@+id/elv_ccleaner"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="6" />
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/btn_ccleaner_clear"
+        style="@style/virusBtn"
+        android:text="一键清理" />
+
+</LinearLayout>

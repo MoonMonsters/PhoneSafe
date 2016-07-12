@@ -8,7 +8,7 @@ package edu.csuft.phonesafe.bean;
 import android.graphics.drawable.Drawable;
 
 /**
- * 子项的信息
+ * 子项的信息，因为该类可以适用于缓存清理和文件清理，所以放到一起来处理
  */
 public class CCleanerChildInfo {
 
@@ -17,30 +17,36 @@ public class CCleanerChildInfo {
      */
     private Drawable appIcon;
     /**
-     * 应用名称
+     * 应用名称，或者文件名
      */
-    private String appName;
+    private String appNameOrfileName;
     /**
-     * 包名
+     * 包名，或者文件
      */
-    private String packageName;
+    private String packageNameOrFilePath;
     /**
      * 是否被选中，如果选中，则需要清理
      */
     private boolean isSelected;
     /**
-     * 垃圾大小
+     * 垃圾大小,或者文件大小
      */
     private long value;
+    /**
+     * 文件类型，有4种类型，包括
+     * 缓存清理，安装包清理，大文件清理，日志清理，用来设置图片的
+     */
+    private int type;
 
-    public CCleanerChildInfo(Drawable appIcon, String appName,
-                             String packageName, boolean isSelected,
-                             long value) {
+    public CCleanerChildInfo(Drawable appIcon, String appNameOrfileName,
+                             String packageNameOrFilePath, boolean isSelected,
+                             long value, int type) {
         this.appIcon = appIcon;
-        this.appName = appName;
-        this.packageName = packageName;
+        this.appNameOrfileName = appNameOrfileName;
+        this.packageNameOrFilePath = packageNameOrFilePath;
         this.isSelected = isSelected;
         this.value = value;
+        this.type = type;
     }
 
     public CCleanerChildInfo() {
@@ -54,20 +60,20 @@ public class CCleanerChildInfo {
         this.appIcon = appIcon;
     }
 
-    public String getAppName() {
-        return appName;
+    public String getAppNameOrfileName() {
+        return appNameOrfileName;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setAppNameOrfileName(String appNameOrfileName) {
+        this.appNameOrfileName = appNameOrfileName;
     }
 
-    public String getPackageName() {
-        return packageName;
+    public String getPackageNameOrFilePath() {
+        return packageNameOrFilePath;
     }
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
+    public void setPackageNameOrFilePath(String packageNameOrFilePath) {
+        this.packageNameOrFilePath = packageNameOrFilePath;
     }
 
     public boolean isSelected() {
@@ -84,5 +90,13 @@ public class CCleanerChildInfo {
 
     public void setValue(long value) {
         this.value = value;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }
