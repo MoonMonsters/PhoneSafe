@@ -39,7 +39,6 @@ public class Config {
     public static final String KEY_AUTO_UPDATE = "key_switch_autoUpdate";
 
     /** 更新app的网址 */
-//    public static final String UPDATE_URL = "http://192.168.56.1:8080/PhoneSafe/update.xml";
-//  public static final String UPDATE_URL = "http://192.168.232.159:8080/PhoneSafe/update.xml";
-  public static final String UPDATE_URL = "http://10.0.2.2:8080/PhoneSafe/update.xml";
+  public static final String UPDATE_URL = "http://192.168.191.1:8080/PhoneSafe/update.xml";
+//  public static final String UPDATE_URL = "http://10.0.2.2:8080/PhoneSafe/update.xml";
 }

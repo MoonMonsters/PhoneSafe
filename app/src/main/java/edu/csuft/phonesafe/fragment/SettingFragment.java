@@ -20,6 +20,7 @@ import edu.csuft.phonesafe.R;
  */
 public class SettingFragment extends PreferenceFragment {
 
+    //Preference的控件信息
     Preference key_preference_clear_cache;
 
     //缓存大小
@@ -40,16 +41,16 @@ public class SettingFragment extends PreferenceFragment {
         //缓存文件夹
         File cacheDir = getActivity().getCacheDir();
         //代码缓存文件夹
-        File codeCacheDir = getActivity().getCodeCacheDir();
+//        File codeCacheDir = getActivity().getCodeCacheDir();
         //外部存储缓存文件夹
         File externalCacheDir = getActivity().getExternalCacheDir();
 
         clearFile(cacheDir);
-        clearFile(codeCacheDir);
+//        clearFile(codeCacheDir);
         clearFile(externalCacheDir);
 
         //弹出提示
-        Toast.makeText(getActivity(), "清楚缓存数据:" + Formatter.formatFileSize(getActivity(),
+        Toast.makeText(getActivity(), "清除缓存数据:" + Formatter.formatFileSize(getActivity(),
                 totalCacheSize), Toast.LENGTH_SHORT).show();
     }
 

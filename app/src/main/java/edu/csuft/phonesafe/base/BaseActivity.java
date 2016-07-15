@@ -9,6 +9,10 @@ import butterknife.ButterKnife;
  * Created by Chalmers on 2016-07-06 17:56.
  * email:qxinhai@yeah.net
  */
+
+/**
+ * 基础Activity，用来设置基本方法
+ */
 public abstract class BaseActivity extends AppCompatActivity {
 
     @Override

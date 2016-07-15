@@ -16,7 +16,7 @@ import edu.csuft.phonesafe.R;
  */
 
 /**
- * 帮助类，在加载数据时显示
+ * 帮助类，在加载数据时显示，以为该功能在多个界面都需要用上，所以提取出来
  */
 
 public class ViewHelper {

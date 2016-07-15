@@ -39,6 +39,7 @@ public class AppManagerActivity extends BaseActivity {
      * 帮助类，用来显示加载数据时的进度条
      */
     private ViewHelper viewHelper = null;
+    /** Fragment的集合 */
     private ArrayList<Fragment> fragmentList = null;
 
     @Bind(R.id.tl_app_manager)
@@ -50,7 +51,7 @@ public class AppManagerActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case Config.SUCCESS_LOAD:
+                case Config.SUCCESS_LOAD:   //数据加在完成
                     //排序
                     sortByAppName();
                     //显示app
@@ -58,7 +59,7 @@ public class AppManagerActivity extends BaseActivity {
                     //隐藏进度条
                     viewHelper.hiddenPbAndTv();
                     break;
-                case Config.UPDATE_PROGRESS:
+                case Config.UPDATE_PROGRESS:    //更新进度条
                     //更新进度条
                     viewHelper.updateProgressBarValue();
                     //更新TextView的进度条的值
@@ -68,11 +69,19 @@ public class AppManagerActivity extends BaseActivity {
         }
     };
 
+    /**
+     * 显示应用信息
+     */
     private void showAppInfo() {
 
+        /*
+        将Fragment加载进ViewPager中，并且传入需要的集合数据
+         */
         fragmentList.add(AppManagerFragment.getInstance(userAppList, true));
         fragmentList.add(AppManagerFragment.getInstance(systemAppList, false));
+        //设置ViewPager的适配器
         vp_app_manager.setAdapter(fragmentPagerAdapter);
+        //将ViewPager的标题设置
         tl_app_manager.setupWithViewPager(vp_app_manager);
     }
 
@@ -80,28 +89,44 @@ public class AppManagerActivity extends BaseActivity {
      * 按应用程序的首字母进行排序
      */
     private void sortByAppName() {
+        //系统应用排序
         Collections.sort(systemAppList);
+        //用户应用排序
         Collections.sort(userAppList);
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     public void initData() {
+        //初始化进度条的相关信息
         viewHelper = new ViewHelper(this);
         systemAppList = new ArrayList<>();
         userAppList = new ArrayList<>();
         fragmentList = new ArrayList<>();
+        //开启线程
         new AppManagerThread().start();
     }
 
+    /**
+     * 把监听器放在此方法中设置
+     */
     @Override
     public void initListener() {
     }
 
+    /**
+     * 返回布局id
+     */
     @Override
     public int getLayoutResourceId() {
         return R.layout.activity_app_manager;
     }
 
+    /**
+     * 在子线程中加载数据
+     */
     private class AppManagerThread extends Thread {
         @Override
         public void run() {
@@ -115,6 +140,7 @@ public class AppManagerActivity extends BaseActivity {
             // 设置最大值为所用应用程序的值
             viewHelper.setPbMaxValue(applications.size());
             for (ApplicationInfo info : applications) {
+
                 //应用图标
                 Drawable appIcon = info.loadIcon(pm);
                 //应用名称
@@ -125,6 +151,7 @@ public class AppManagerActivity extends BaseActivity {
                 PackageInfo packageInfo;
                 String versionName = null;
                 try {
+                    //得到包信息，第二个参数只能填0
                     packageInfo = pm.getPackageInfo(packageName, 0);
 
                     //应用版本号
@@ -155,19 +182,25 @@ public class AppManagerActivity extends BaseActivity {
         }
     }
 
+    /**
+     * FragmentPagerAdapter的适配器，用来设置ViewPager的适配器
+     */
     FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
         String[] titles = {"用户应用", "系统应用"};
 
+        /** 返回Fragment对象 */
         @Override
         public Fragment getItem(int position) {
             return fragmentList.get(position);
         }
 
+        /** 返回Fragment对象个数据 */
         @Override
         public int getCount() {
             return fragmentList.size();
         }
 
+        /** 返回标题 */
         @Override
         public CharSequence getPageTitle(int position) {
             return titles[position];

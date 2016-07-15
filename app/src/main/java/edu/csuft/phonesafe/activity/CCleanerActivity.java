@@ -118,15 +118,16 @@ public class CCleanerActivity extends BaseActivity {
      */
     CCleanerBroadCast cCleanerBroadCast = null;
     /**
-     * 正在扫描的文件名，当10秒后文件名没有发生改变的话，就说明扫描完成
+     * 正在扫描的文件名，当3秒后文件名没有发生改变的话，就说明扫描完成
      */
     private String fileNameText = null;
 
+    /** 处理ui变化 */
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case Config.UPDATE_PROGRESS:
+                case Config.UPDATE_PROGRESS:    //更新
                     Bundle data = msg.getData();
                     //文件名
                     String fileName = data.getString(FILE_NAME, null);
@@ -136,10 +137,10 @@ public class CCleanerActivity extends BaseActivity {
                     tv_cleaner_file_name.setText("正在扫描.." + fileName);
                     setFileTotalSize();
                     break;
-                case Config.SUCCESS_LOAD:
+                case Config.SUCCESS_LOAD:   //加载完成
                     tv_cleaner_file_name.setText("扫描完成");
                     break;
-                case Config.CHANGE_SELECTED_OR_CLEAR:
+                case Config.CHANGE_SELECTED_OR_CLEAR:   //数据发生改变
                     Bundle b = msg.getData();
                     long size = b.getLong(Config.TOTAL_SIZE_DATA);
                     totalSize += size;
@@ -150,10 +151,13 @@ public class CCleanerActivity extends BaseActivity {
         }
     };
 
+    /** 设置垃圾文件的总大小，即设置显示垃圾总大小部分TextView的数据 */
     private void setFileTotalSize() {
         //将总的大小转换成合适的单位格式
         String fileSizeStr = Formatter.formatFileSize(CCleanerActivity.this, totalSize);
+        //得到数字
         String numStr = fileSizeStr.substring(0, fileSizeStr.length() - 2);
+        //得到单位
         String unitStr = fileSizeStr.substring(fileSizeStr.length() - 2);
         //设置文件大小
         tv_ccleaner_file_size.setText(numStr);
@@ -162,10 +166,13 @@ public class CCleanerActivity extends BaseActivity {
         cCleanerAdapter.notifyDataSetChanged();
     }
 
+    /** 初始化数据方法 */
     @Override
     public void initData() {
+        //初始化集合
         initArrayListData();
 
+        //实例化Adapter对象
         cCleanerAdapter = new CCleanerAdapter(CCleanerActivity.this, parentInfoList, allChildInfoList);
         elv_ccleaner.setAdapter(cCleanerAdapter);
 
@@ -173,11 +180,21 @@ public class CCleanerActivity extends BaseActivity {
         setParentTitle();
         new AppManagerThread().start();
         new FileThread().start();
+        //设置时间任务
         setTimerTask();
 
+        //注册广播
+        registerBroadcast();
+    }
+
+    /** 注册广播 */
+    private void registerBroadcast() {
         IntentFilter filter = new IntentFilter();
+        //添加广播内容
         filter.addAction(Config.CHANGE_SELECTION_BROADCAST);
+        //得到广播对象
         cCleanerBroadCast = new CCleanerBroadCast();
+        //注册广播
         registerReceiver(cCleanerBroadCast,filter);
     }
 
@@ -187,6 +204,7 @@ public class CCleanerActivity extends BaseActivity {
         timerTask = new TimerTask() {
             @Override
             public void run() {
+                //获得当前扫描的文件名
                 String tempText = tv_cleaner_file_name.getText().toString();
                 //如果当前扫描的文件名和临时保存的文件名不同，则说明正在扫描
                 if (!tempText.equals(fileNameText)) {
@@ -199,11 +217,14 @@ public class CCleanerActivity extends BaseActivity {
             }
         };
         //3秒钟执行一次任务
-        timer.schedule(timerTask, 0, 10000);
+        timer.schedule(timerTask, 0, 3000);
     }
 
     /** 初始化集合数据 */
     private void initArrayListData() {
+        /*
+        初始化集合
+         */
         parentInfoList = new ArrayList<>();
         allChildInfoList = new ArrayList<>();
         cacheList = new ArrayList<>();
@@ -212,6 +233,9 @@ public class CCleanerActivity extends BaseActivity {
         logList = new ArrayList<>();
         noneDirList = new ArrayList<>();
 
+        /*
+        将各个集合加入总的集合之中
+         */
         allChildInfoList.add(cacheList);
         allChildInfoList.add(apkList);
         allChildInfoList.add(bigFileList);
@@ -223,42 +247,59 @@ public class CCleanerActivity extends BaseActivity {
      * 设置父项的标题
      */
     private void setParentTitle() {
+        //父项显示的文字
         String[] title = new String[]{"缓存清理", "安装包清理", "大文件清理", "日志清理", "空文件夹清理"};
 
+        //通过循环加入集合中
         for (int i = 0; i < title.length; i++) {
             CCleanerParentInfo parentInfo = new CCleanerParentInfo(title[i], true, 0);
             parentInfoList.add(parentInfo);
         }
     }
 
+    /** 设置监听器 */
     @Override
     public void initListener() {
         btn_ccleaner_clear.setOnClickListener(onClickListener);
     }
 
+    /** 返回布局id */
     @Override
     public int getLayoutResourceId() {
         return R.layout.activity_ccleaner;
     }
 
-
+    /** 在子线程中扫描文件 */
     private class FileThread extends Thread {
         @Override
         public void run() {
+            //得到根目录
             File rootFile = Environment.getExternalStorageDirectory();
+            //递归查找
             findAllFile(rootFile);
         }
     }
 
+    /**
+     * 递归扫描文件，并对文件内容进行分类处理
+     * @param file 文件或文件夹
+     */
+    private int len = 0;
     private void findAllFile(File file) {
+        //创建文件的标准格式，之后只需要修改Type即可
         CCleanerChildInfo childInfo = new CCleanerChildInfo(null, file.getName(), file.getAbsolutePath(), true,
                 file.length(), Config.AN_ZHUANG_BAO_QING_LI);
-        if (file.isFile()) {  //如果该File为文件
+        //如果该File为文件
+        if (file.isFile()) {
+            //File类型
             int type = 0;
             if (isCleanType(file)) {
                 if (file.getName().endsWith(".apk")) {    //如果apk文件
-                    apkList.add(childInfo);
+                    //设置文件类型
                     type = Config.AN_ZHUANG_BAO_QING_LI;
+                    //在对象中设置Type的值
+                    childInfo.setType(type);
+                    apkList.add(childInfo);
                 } else if (file.getName().endsWith(".log") ||
                         file.getName().endsWith(".qlog")) {  //如果日志文件
                     type = Config.RI_ZHI_QING_LI;
@@ -269,25 +310,37 @@ public class CCleanerActivity extends BaseActivity {
                     childInfo.setType(Config.DA_WEN_JIAN_QING_LI);
                     bigFileList.add(childInfo);
                 }
+                //得到父项对象
                 CCleanerParentInfo parentInfo = parentInfoList.get(type);
+                //设置父项中的数值
                 parentInfo.setValue(parentInfo.getValue() + file.length());
+                //发送更新消息
                 sendUpdateMsg(childInfo);
             }
-
         } else {  //如果是文件夹
-            if (file.listFiles() == null || file.listFiles().length == 0) {   //如果是空文件夹
-                childInfo.setType(Config.KONG_WEN_JIAN_JIA_QING_LI);
-                noneDirList.add(childInfo);
-                CCleanerParentInfo parentInfo = parentInfoList.get(Config.KONG_WEN_JIAN_JIA_QING_LI);
-                parentInfo.setValue(parentInfo.getValue() + file.length());
-                sendUpdateMsg(childInfo);
+            //如果是空文件夹
+            if (file.listFiles() == null || file.listFiles().length == 0) {
 
+                //个数+1
+                len ++;
+                //设置文件类型
+                childInfo.setType(Config.KONG_WEN_JIAN_JIA_QING_LI);
+                //加入集合
+                noneDirList.add(childInfo);
+                //根据文件类型得到父项对象
+                CCleanerParentInfo parentInfo = parentInfoList.get(Config.KONG_WEN_JIAN_JIA_QING_LI);
+                //设置父项的值
+                parentInfo.setValue(len * 4096);
+                //发送更新消息
+                sendUpdateMsg(childInfo);
             } else {  //如果还有子文件夹
                 for (final File f : file.listFiles()) {
 
+                    //在线程池中执行任务，加快扫描速度
                     threadPool.execute(new Runnable() {
                         @Override
                         public void run() {
+                            //递归查找
                             findAllFile(f);
                         }
                     });
@@ -300,15 +353,18 @@ public class CCleanerActivity extends BaseActivity {
      * 发送更新通知，改变顶部显示
      */
     private void sendUpdateMsg(CCleanerChildInfo childInfo) {
+        //得到Message对象
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
         //文件名
         data.putString(FILE_NAME, childInfo.getAppNameOrfileName());
         //该文件大小
         data.putLong(FILE_SIZE, childInfo.getValue());
+        //将Bundle对象放入Message中传递
         msg.setData(data);
         //消息类型
         msg.what = Config.UPDATE_PROGRESS;
+        //发送消息
         handler.sendMessage(msg);
     }
 
@@ -318,6 +374,7 @@ public class CCleanerActivity extends BaseActivity {
     private boolean isCleanType(File file) {
         boolean b = false;
 
+        //如果是apk文件或者日志文件或者大文件，则属于清理类型
         if (file.getName().endsWith(".apk")
                 || file.getName().endsWith(".log")
                 || file.getName().endsWith(".qlog")
@@ -325,7 +382,7 @@ public class CCleanerActivity extends BaseActivity {
             b = true;
         }
 
-
+        //返回结果
         return b;
     }
 
@@ -344,6 +401,7 @@ public class CCleanerActivity extends BaseActivity {
             List<ApplicationInfo> applications = pm.getInstalledApplications(PackageManager.GET_META_DATA |
                     PackageManager.GET_SHARED_LIBRARY_FILES);
 
+            //遍历ApplicationInfo集合，从中得到数据
             for (ApplicationInfo info : applications) {
                 //应用图标
                 Drawable appIcon = info.loadIcon(pm);
@@ -352,10 +410,12 @@ public class CCleanerActivity extends BaseActivity {
                 //应用包名
                 String packageName = info.packageName;
 
+                //创建缓存文件对象
                 CCleanerChildInfo childInfo = new CCleanerChildInfo(appIcon, appName,
                         packageName, true, 0l, Config.HUAN_CUN_QING_LI);
 
                 try {
+                    //查询缓存文件大小
                     queryPkgCacheSize(childInfo);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -374,13 +434,18 @@ public class CCleanerActivity extends BaseActivity {
                 mPackageManager = getBaseContext().getPackageManager();// 得到被反射调用函数所在的类对象
             }
             try {
-                String methodName = "getPackageSizeInfo";// 想通过反射机制调用的方法名
-                Class<?> parameterType1 = String.class;// 被反射的方法的第一个参数的类型
-                Class<?> parameterType2 = IPackageStatsObserver.class;// 被反射的方法的第二个参数的类型
+                // 想通过反射机制调用的方法名
+                String methodName = "getPackageSizeInfo";
+                // 被反射的方法的第一个参数的类型
+                Class<?> parameterType1 = String.class;
+                // 被反射的方法的第二个参数的类型
+                Class<?> parameterType2 = IPackageStatsObserver.class;
                 Method getPackageSizeInfo = mPackageManager.getClass().getMethod(
                         methodName, parameterType1, parameterType2);
+                // 方法使用的参数
+                //第一个表示包管理器，第二个是包名，第三个是MyIPStub对象
                 getPackageSizeInfo.invoke(mPackageManager,
-                        childInfo.getPackageNameOrFilePath(), new MyIPStub(childInfo));// 方法使用的参数
+                        childInfo.getPackageNameOrFilePath(), new MyIPStub(childInfo));
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -402,11 +467,14 @@ public class CCleanerActivity extends BaseActivity {
 
         @Override
         public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
-            if (pStats.cacheSize >= 1024) {
-                childInfo.setValue(pStats.cacheSize);
+            if (pStats.cacheSize >= 1024) { //如果缓存数据大于1KB
+                childInfo.setValue(pStats.cacheSize);   //设置数据
+                //加入到cache集合中
                 cacheList.add(childInfo);
 
+                //得到对应的父项对象
                 CCleanerParentInfo parentInfo = parentInfoList.get(Config.HUAN_CUN_QING_LI);
+                //设置父项中的数值
                 parentInfo.setValue(parentInfo.getValue() + childInfo.getValue());
 
                 //发送更新消息
@@ -415,6 +483,7 @@ public class CCleanerActivity extends BaseActivity {
         }
     }
 
+    /** 销毁界面时执行的方法 */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -430,6 +499,7 @@ public class CCleanerActivity extends BaseActivity {
 
             //得到传递的数据
             long size = intent.getLongExtra(Config.TOTAL_SIZE_DATA, 0);
+            //发送消息
             sendClearDataMsg(size);
         }
     }
@@ -441,6 +511,7 @@ public class CCleanerActivity extends BaseActivity {
     private void sendClearDataMsg(long size) {
         //封装
         Bundle bundle = new Bundle();
+        //加入数据
         bundle.putLong(Config.TOTAL_SIZE_DATA,size);
 
         //发送消息
@@ -450,27 +521,37 @@ public class CCleanerActivity extends BaseActivity {
         handler.sendMessage(msg);
     }
 
+    /** 点击事件 */
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if(v.getId() == R.id.btn_ccleaner_clear){
+                /*
+                清理垃圾，为了加快清理过程，将清理方法都单独放在子线程中
+                 */
+                //清理应用程序缓存
                 cleanAppCache();
+                //清理apk文件
                 clearApkData();
+                //清理大文件
                 clearBigFileData();
+                //清理日志文件
                 clearLogData();
+                //清理空文件夹
                 clearNoneDirData();
             }
         }
     };
 
     /**
-     * 清理缓存
+     * 清理缓存，该方法的执行需要root权限
      */
     private void cleanAppCache() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 CCleanerParentInfo parentInfo = parentInfoList.get(Config.HUAN_CUN_QING_LI);
+
                 for (int i=0; i<cacheList.size(); i++) {
                     CCleanerChildInfo childInfo = cacheList.get(i);
                     if (childInfo.isSelected()) {
@@ -478,16 +559,27 @@ public class CCleanerActivity extends BaseActivity {
                             parentInfo.setValue(parentInfo.getValue() - childInfo.getValue());
 
                             //需要root权限，直接利用linux命令删除文件夹或文件
+                            //清理cache文件夹
                             String command1 = "rm -r /" + childInfo.getPackageNameOrFilePath() + "/cache";
+                            //清理files文件夹
                             String command2 = "rm -r /" + childInfo.getPackageNameOrFilePath() + "/files";
+                            //清理webview.db文件
                             String command3 = "rm -r /" + childInfo.getPackageNameOrFilePath() + "/database/webview.db";
+                            //清理webviewcache.db文件
                             String command4 = "rm -r /" + childInfo.getPackageNameOrFilePath() + "/database/webviewCache.db";
 
+                            /*
+                            执行每个命令
+                             */
                             Runtime.getRuntime().exec(command1);
                             Runtime.getRuntime().exec(command2);
                             Runtime.getRuntime().exec(command3);
                             Runtime.getRuntime().exec(command4);
 
+                            //从列表中移除掉该数据项
+                            cacheList.remove(i);
+                            i --;
+                            //发送消息
                             sendClearDataMsg(-childInfo.getValue());
 
                         } catch (Exception ex) {
@@ -495,7 +587,6 @@ public class CCleanerActivity extends BaseActivity {
                         }
                     }
                 }
-
             }
         }).start();
     }
@@ -508,12 +599,17 @@ public class CCleanerActivity extends BaseActivity {
                 CCleanerParentInfo parentInfo = parentInfoList.get(Config.AN_ZHUANG_BAO_QING_LI);
                 for(int i=0; i<apkList.size(); i++){
                     CCleanerChildInfo childInfo = apkList.get(i);
+                    //如果该文件是被选中的，则清理掉
                     if(childInfo.isSelected()){
+                        //更新父项的值
                         parentInfo.setValue(parentInfo.getValue() - childInfo.getValue());
 
+                        //根据文件路径创建文件对象
                         File file = new File(childInfo.getPackageNameOrFilePath());
+                        //删除文件
                         file.delete();
                         apkList.remove(childInfo);
+                        //因为清理一个文件，所以该处要-1
                         i --;
 
                         //发送消息
@@ -533,6 +629,7 @@ public class CCleanerActivity extends BaseActivity {
                 for(int i=0; i<bigFileList.size(); i++){
                     CCleanerChildInfo childInfo = bigFileList.get(i);
                     if(childInfo.isSelected()){
+                        //更新父项数值
                         parentInfo.setValue(parentInfo.getValue() - childInfo.getValue());
                         File file = new File(childInfo.getPackageNameOrFilePath());
                         file.delete();
@@ -556,10 +653,11 @@ public class CCleanerActivity extends BaseActivity {
                 for(int i=0; i<logList.size(); i++){
                     CCleanerChildInfo childInfo = logList.get(i);
                     if(childInfo.isSelected()){
+                        //更新父项数值
                         parentInfo.setValue(parentInfo.getValue() - childInfo.getValue());
                         File file = new File(childInfo.getPackageNameOrFilePath());
                         file.delete();
-                        apkList.remove(childInfo);
+                        logList.remove(childInfo);
                         i --;
 
                         //发送消息
@@ -585,11 +683,10 @@ public class CCleanerActivity extends BaseActivity {
                             file.delete();
                         }
 
+                        noneDirList.remove(childInfo);
+                        i --;
                         //发送消息
                         sendClearDataMsg(-childInfo.getValue());
-
-                        apkList.remove(childInfo);
-                        i --;
                     }
                 }
             }

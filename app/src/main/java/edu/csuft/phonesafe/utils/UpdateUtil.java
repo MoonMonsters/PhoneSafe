@@ -24,6 +24,10 @@ import edu.csuft.phonesafe.bean.UpdateInfo;
  * Created by Chalmers on 2016-06-19 13:29.
  * email:qxinhai@yeah.net
  */
+
+/**
+ * 更新程序工具类
+ */
 public class UpdateUtil implements DownloadUtil.IDownload{
     private Context context = null;
     private static UpdateUtil updateUtil = null;

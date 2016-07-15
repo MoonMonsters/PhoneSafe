@@ -25,8 +25,6 @@ public class XmlParseUtil {
      * 解析网络接收的字节流，装换成UpdateInfo对象
      * @param inputStream 字节流
      * @return UpdateInfo对象
-     * @throws XmlPullParserException
-     * @throws IOException
      */
     public static UpdateInfo parseXmlData(InputStream inputStream) throws XmlPullParserException, IOException {
         UpdateInfo info = new UpdateInfo();
@@ -35,6 +33,7 @@ public class XmlParseUtil {
         parser.setInput(inputStream,"utf-8");
 
         int type = parser.getEventType();
+        //如果type不是结束标志，就一直遍历
         while(type != XmlPullParser.END_DOCUMENT){
 
             switch (type){
@@ -50,9 +49,11 @@ public class XmlParseUtil {
                     break;
             }
 
+            //遍历下一行
             type = parser.next();
         }
 
+        //返回对象
         return info;
     }
 }

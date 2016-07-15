@@ -3,6 +3,7 @@ package edu.csuft.phonesafe.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,10 @@ import edu.csuft.phonesafe.view.MarqueeText;
  * Created by Chalmers on 2016-07-09 10:32.
  * email:qxinhai@yeah.net
  */
+
+/**
+ * 应用管理界面的适配器
+ */
 public class CCleanerAdapter extends BaseExpandableListAdapter {
 
     /**
@@ -35,6 +40,7 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
      * 所有的子项集合，即字项集合的集合
      */
     private ArrayList<ArrayList<CCleanerChildInfo>> allChildInfoList = null;
+    /** 上下文对象 */
     private Context context = null;
 
     public CCleanerAdapter(Context context, ArrayList<CCleanerParentInfo> parentInfoList,
@@ -104,41 +110,60 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
+    /** 设置父项的显示数据View对象 */
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 
+        //父项的ViewHolder
         ParentViewHolder viewHolder = null;
 
+        //如果为空，则创建对象
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_ccleaner_parent, null);
+            //创建ViewHolder对象
             viewHolder = new ParentViewHolder(convertView);
+            //设置tag
             convertView.setTag(viewHolder);
         } else {
+            //直接从convertView中获得
             viewHolder = (ParentViewHolder) convertView.getTag();
         }
 
+        //绑定数据
         viewHolder.bindData(parentInfoList.get(groupPosition));
 
         return convertView;
     }
 
+    /** 获得子项的显示的View对象 */
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         ChildViewHolder viewHolder = null;
 
+        //如果convertView对象为空，则实例化该对象
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_ccleaner_child, null);
             viewHolder = new ChildViewHolder(convertView);
+            //设置tag
             convertView.setTag(viewHolder);
         } else {
+            //重新获得tag，提高性能
             viewHolder = (ChildViewHolder) convertView.getTag();
         }
 
+        //绑定数据
         viewHolder.bindData(allChildInfoList.get(groupPosition).get(childPosition));
 
         return convertView;
     }
 
+    /**
+     * 是否被选择
+     *
+     * @param groupPosition 父项位置
+     * @param childPosition 子项位置
+     * @return 是否被选择
+     */
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         // TODO
@@ -171,7 +196,11 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
 
         @Override
         public void bindData(Object obj) {
+            //将Object转换成CCleanerParentInfo类型
             CCleanerParentInfo parentInfo = (CCleanerParentInfo) obj;
+            /*
+            设置控件数据
+             */
             tv_item_ccleaner_parent_type.setText(parentInfo.getType());
             tv_item_ccleaner_parent_value.setText(Formatter.formatFileSize(context, parentInfo.getValue()));
             if (parentInfo.isSelect()) {
@@ -180,6 +209,7 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
                 iv_item_ccleaner_parent_select.setImageResource(R.drawable.ic_false);
             }
 
+            //设置监听器，传递CCleanerParentInfo对象
             iv_item_ccleaner_parent_select.setOnClickListener(new IVListener(parentInfo));
         }
     }
@@ -211,27 +241,37 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
             super(view);
         }
 
+        /**
+         * 绑定数据
+         * @param obj 需要绑定数据类型对象
+         */
         @Override
         public void bindData(Object obj) {
             CCleanerChildInfo childInfo = (CCleanerChildInfo) obj;
             switch (childInfo.getType()) {
-                case Config.HUAN_CUN_QING_LI:
+                /*
+                根据文件类型设置图标
+                 */
+                case Config.HUAN_CUN_QING_LI:   //如果是缓存，则设置之前设置的图片
                     iv_item_ccleaner_child_icon.setImageDrawable(childInfo.getAppIcon());
                     break;
-                case Config.AN_ZHUANG_BAO_QING_LI:
+                case Config.AN_ZHUANG_BAO_QING_LI:  //安装文件
                     iv_item_ccleaner_child_icon.setImageResource(R.drawable.ic_apk);
                     break;
-                case Config.RI_ZHI_QING_LI:
+                case Config.RI_ZHI_QING_LI: //日志文件
                     iv_item_ccleaner_child_icon.setImageResource(R.drawable.ic_log);
                     break;
-                case Config.DA_WEN_JIAN_QING_LI:
+                case Config.DA_WEN_JIAN_QING_LI:    //大文件
                     iv_item_ccleaner_child_icon.setImageResource(R.drawable.ic_big_file);
                     break;
-                case Config.KONG_WEN_JIAN_JIA_QING_LI:
+                case Config.KONG_WEN_JIAN_JIA_QING_LI:  //空文件夹
                     iv_item_ccleaner_child_icon.setImageResource(R.drawable.ic_dir);
                     break;
             }
 
+            /*
+            设置Text值
+             */
             tv_item_ccleaner_child_name.setText(childInfo.getAppNameOrfileName());
             tv_item_ccleaner_child_value.setText(Formatter.formatFileSize(context, childInfo.getValue()));
             cb_item_ccleaner_child_select.setChecked(childInfo.isSelected());
@@ -262,7 +302,8 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
             if (!childInfo.isSelected()) {
                 size = -size;
             }
-            sendBroadcast(size);
+            //改变顶部的显示大小的值
+//            sendBroadcast(size);
 
             /*
              该段代码的意思是，如果子项不是全选状态，那么父项就不能是全选状态
@@ -271,7 +312,7 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
              */
             //父项的位置
             int position = 0;
-            //状态首先置为true
+            //状态首先置为true，即子项是否为全选状态
             boolean flag = true;
             //遍历子项,找到该子项对应的父项
             for (int i = 0; i < allChildInfoList.size(); i++) {
@@ -283,8 +324,8 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
                     position = i;
                     //判断该子项中的所有数据是否都被选中
                     for (CCleanerChildInfo childInfo : childInfoList) {
-                        //如果没有，则把flag置为false，并且推出循环
-                        if (childInfo.isSelected() != flag) {
+                        //如果有某一项未选中，则把flag置为false，并且退出循环
+                        if (!childInfo.isSelected()) {
                             flag = false;
                             break;
                         }
@@ -293,14 +334,18 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
                 }
             }
 
+            /*****************************************************/
+            //根据点击子项位置得到父项
             CCleanerParentInfo parentInfo = parentInfoList.get(position);
-            if(childInfo.isSelected()){
-                parentInfo.setValue(parentInfo.getValue() + childInfo.getValue());
-            }else{
-                parentInfo.setValue(parentInfo.getValue() - childInfo.getValue());
-            }
+            //设置父项的值
+            parentInfo.setValue(parentInfo.getValue() + size);
 
+            //去改变父项的选中的图片
+            //false表示不需要改变子项状态
+            //flag表示父项当前的选中状态，即显示的图片类型
             setSelectedItem(flag, position, false);
+
+            Log.i("TAG","parentInfo.getValue = " + parentInfo.getValue());
 
             //刷新界面
             CCleanerAdapter.this.notifyDataSetChanged();
@@ -308,10 +353,11 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
     }
 
     /**
-     * 图片的点击事件，也就是控制全选也全不选的开关
+     * 父项图片的点击事件，也就是控制全选与全不选的开关
      */
     private class IVListener implements View.OnClickListener {
 
+        /** 父项对象 */
         private CCleanerParentInfo parentInfo = null;
 
         public IVListener(CCleanerParentInfo parentInfo) {
@@ -320,6 +366,9 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
 
         @Override
         public void onClick(View v) {
+
+            Log.i("TAG",""+parentInfo.getType());
+
             //得到当前的状态
             boolean select = parentInfo.isSelect();
             //点击后置反
@@ -328,6 +377,7 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
             parentInfo.setSelect(select);
             //得到父项的位置
             int position = parentInfoList.indexOf(parentInfo);
+            //设置父项的图片，true表示会根据select来改变子项的选中状态
             setSelectedItem(select, position, true);
             //刷新界面
             CCleanerAdapter.this.notifyDataSetChanged();
@@ -344,13 +394,20 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
      * @param isSelectedAll 是否需要全部子项的状态
      */
     private void setSelectedItem(boolean select, int position, boolean isSelectedAll) {
+        //选中的文件的总大小
         long totalSize = 0;
+        //根据position得到父项
         CCleanerParentInfo parentInfo = parentInfoList.get(position);
+        //如果是需要改变子项的选中状态
         if (isSelectedAll) {
+            Log.i("TAG","Before:parentInfo.getValue = " + parentInfo.getValue());
             //得到该父项下所有子项
+            //因为父项的position对于着子项集合中的position个位置的子项
             ArrayList<CCleanerChildInfo> childInfoList = allChildInfoList.get(position);
             //全部设置成跟父项相同的状态
+            Log.i("TAG","childInfoList.size() = " + childInfoList.size());
             for (int i = 0; i < childInfoList.size(); i++) {
+                //得到子项对象
                 CCleanerChildInfo childInfo = childInfoList.get(i);
                 /*
                 这段代码特别重要，也有点难以理解
@@ -358,30 +415,44 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
                 如果没有选中，那么则全部累加计算
                 主要是在测试的时候，发现通过改变不同的子项父项状态，总的值一直在增加，所以加上这部分代码
                  */
-                if(select){ //如果父项是选择状态
-                    if(!childInfo.isSelected()){
+                if (select) { //如果父项是选择状态
+                    //如果子项之前是未选中状态，那么值就累加，否则不用管
+                    if (!childInfo.isSelected()) {
+                        //选中的值累加
                         totalSize += childInfo.getValue();
                     }
-                }else{
-                    totalSize += childInfo.getValue();
+                } else {    //如果当前的父项是未选中状态，则累加所有子项的值
+                    if(childInfo.isSelected()){
+                        totalSize += childInfo.getValue();
+                    }
                 }
+
+                Log.i("TAG","size = " + totalSize);
+                //将子项的选中状态改成和父项相同
                 childInfo.setSelected(select);
             }
+            //如果不需要改变，则直接改变父类的状态即可
         } else {
             parentInfoList.get(position).setSelect(select);
         }
 
-        //如果是全部取消，那么去负值
+        //如果是全部取消，那么取负值
         if (!select) {
             totalSize = -totalSize;
         }
+        Log.i("TAG","totalSize = " + totalSize);
+        //改变父项的显示的值
         parentInfo.setValue(parentInfo.getValue() + totalSize);
+
+        Log.i("TAG","After:parentInfo.getValue = " + parentInfo.getValue());
+
         sendBroadcast(totalSize);
     }
 
     /**
      * 发送广播，改变Activity中顶部的显示
-     * @param size
+     *
+     * @param size 改变了的值
      */
     private void sendBroadcast(long size) {
         Intent intent = new Intent();

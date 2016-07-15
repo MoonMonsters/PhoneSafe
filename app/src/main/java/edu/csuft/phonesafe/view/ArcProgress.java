@@ -17,28 +17,35 @@ import android.view.View;
 import edu.csuft.phonesafe.R;
 
 /**
- * Created by bruce on 11/6/14.
+ * 弧形图
  */
 public class ArcProgress extends View {
 
 	/*
 	中间的百分比是根据ProgressBar的Progress值来写的，所以只需要改progress的值就行
 	 */
-
+	/** 画笔 */
 	private Paint paint;
+	/** 画笔 */
 	protected Paint textPaint;
 
+	/** 矩形对象 */
 	private RectF rectF = new RectF();
 
+	/** 粗细 */
 	private float strokeWidth;
+	/** 文字大小 */
 	private float suffixTextSize;
 	/** 底部文字大小 */
 	private float bottomTextSize;
 	/** 底部文字 */
 	private String bottomText;
+	/** 文字大小 */
 	private float textSize;
+	/** 文字颜色 */
 	private int textColor;
 	private int progress = 0;
+	/** 最大值 */
 	private int max;
 	private int finishedStrokeColor;
 	private int unfinishedStrokeColor;
@@ -77,14 +84,29 @@ public class ArcProgress extends View {
 	private static final String INSTANCE_ARC_ANGLE = "arc_angle";
 	private static final String INSTANCE_SUFFIX = "suffix";
 
+	/**
+	 * 构造方法
+	 * @param context 上下午呢对象
+     */
 	public ArcProgress(Context context) {
 		this(context, null);
 	}
 
+	/**
+	 * 构造方法
+	 * @param context 上下文对象
+	 * @param attrs 属性值
+     */
 	public ArcProgress(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
 	}
 
+	/**
+	 * 构造方法
+	 * @param context 上下文对象
+	 * @param attrs 属性值
+	 * @param defStyleAttr 类型
+     */
 	public ArcProgress(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 
@@ -105,6 +127,10 @@ public class ArcProgress extends View {
 		initPainters();
 	}
 
+	/**
+	 * 根据TypeedArray值初始化对象
+	 * @param attributes TypedArray对象
+     */
 	protected void initByAttributes(TypedArray attributes) {
 		finishedStrokeColor = attributes.getColor(
 				R.styleable.ArcProgress_arc_finished_color,
@@ -138,6 +164,9 @@ public class ArcProgress extends View {
 				.getString(R.styleable.ArcProgress_arc_bottom_text);
 	}
 
+	/**
+	 * 初始化画笔
+	 */
 	protected void initPainters() {
 		textPaint = new TextPaint();
 		textPaint.setColor(textColor);
@@ -152,43 +181,75 @@ public class ArcProgress extends View {
 		paint.setStrokeCap(Paint.Cap.ROUND);
 	}
 
+	/**
+	 * 初始化分割线
+	 */
 	@Override
 	public void invalidate() {
 		initPainters();
 		super.invalidate();
 	}
 
+	/**
+	 * 得到边框的宽度
+	 * @return float类型数值
+     */
 	public float getStrokeWidth() {
 		return strokeWidth;
 	}
 
+	/**
+	 * 设置边框的值
+	 * @param strokeWidth float类型值
+     */
 	public void setStrokeWidth(float strokeWidth) {
 		this.strokeWidth = strokeWidth;
 		this.invalidate();
 	}
 
+	/** 得到百分比的字的大小 */
 	public float getSuffixTextSize() {
 		return suffixTextSize;
 	}
 
+	/**
+	 * 设置百分比字体的大小
+	 * @param suffixTextSize float类型，字体大小
+     */
 	public void setSuffixTextSize(float suffixTextSize) {
 		this.suffixTextSize = suffixTextSize;
 		this.invalidate();
 	}
 
+	/**
+	 * 得到底部显示文字
+	 * @return
+     */
 	public String getBottomText() {
 		return bottomText;
 	}
 
+	/**
+	 * 设置底部显示文字
+	 * @param bottomText 底部文字
+     */
 	public void setBottomText(String bottomText) {
 		this.bottomText = bottomText;
 		this.invalidate();
 	}
 
+	/**
+	 * 得到进度条的值
+	 * @return int，进度条的值
+     */
 	public int getProgress() {
 		return progress;
 	}
 
+	/**
+	 * 设置进度条的值
+	 * @param progress int类型，进度条的值
+     */
 	public void setProgress(int progress) {
 		this.progress = progress;
 		if (this.progress > getMax()) {
@@ -197,10 +258,18 @@ public class ArcProgress extends View {
 		invalidate();
 	}
 
+	/**
+	 * 得到进度条的最大值
+	 * @return int类型，进度条的最大值
+     */
 	public int getMax() {
 		return max;
 	}
 
+	/**
+	 * 设置进度条的最大值
+	 * @param max int类型，最大值
+     */
 	public void setMax(int max) {
 		if (max > 0) {
 			this.max = max;
@@ -208,73 +277,136 @@ public class ArcProgress extends View {
 		}
 	}
 
+	/**
+	 * 得到底部文字的字体的大小
+	 * @return
+     */
 	public float getBottomTextSize() {
 		return bottomTextSize;
 	}
 
+	/**
+	 * 设置底部文字的大小
+	 * @param bottomTextSize float类型，底部文字字体大小
+     */
 	public void setBottomTextSize(float bottomTextSize) {
 		this.bottomTextSize = bottomTextSize;
 		this.invalidate();
 	}
 
+	/**
+	 * 得到字体大小
+	 * @return float类型，字体大小
+     */
 	public float getTextSize() {
 		return textSize;
 	}
 
+	/**
+	 * 设置字体大小
+	 * @param textSize 字体大小
+     */
 	public void setTextSize(float textSize) {
 		this.textSize = textSize;
 		this.invalidate();
 	}
 
+	/**
+	 * 得到字体颜色
+	 * @return int类型，字体大小
+     */
 	public int getTextColor() {
 		return textColor;
 	}
 
+	/**
+	 * 设置字体颜色
+	 * @param textColor 字体颜色
+     */
 	public void setTextColor(int textColor) {
 		this.textColor = textColor;
 		this.invalidate();
 	}
 
+	/**
+	 * 获得结束时的边框的颜色
+     */
 	public int getFinishedStrokeColor() {
 		return finishedStrokeColor;
 	}
 
+	/**
+	 * 设置结束时边框的颜色
+	 * @param finishedStrokeColor int类型，边框颜色
+     */
 	public void setFinishedStrokeColor(int finishedStrokeColor) {
 		this.finishedStrokeColor = finishedStrokeColor;
 		this.invalidate();
 	}
 
+	/**
+	 * 得到未结束时边框的颜色
+	 * @return
+     */
 	public int getUnfinishedStrokeColor() {
 		return unfinishedStrokeColor;
 	}
 
+	/**
+	 * 设置为结束时边框的颜色
+	 * @param unfinishedStrokeColor int类型，未结束时边框颜色
+     */
 	public void setUnfinishedStrokeColor(int unfinishedStrokeColor) {
 		this.unfinishedStrokeColor = unfinishedStrokeColor;
 		this.invalidate();
 	}
 
+	/**
+	 * 得到弧线的弧度
+	 * @return float类型，弧线的弧度
+     */
 	public float getArcAngle() {
 		return arcAngle;
 	}
 
+	/**
+	 * 设置弧线的弧度
+	 * @param arcAngle 弧度值
+     */
 	public void setArcAngle(float arcAngle) {
 		this.arcAngle = arcAngle;
 		this.invalidate();
 	}
 
+	/**
+	 * 得到百分比显示的文字
+	 * @return
+     */
 	public String getSuffixText() {
 		return suffixText;
 	}
 
+	/**
+	 * 设置百分比显示的文字
+	 * @param suffixText 需要显示的文字
+     */
 	public void setSuffixText(String suffixText) {
 		this.suffixText = suffixText;
 		this.invalidate();
 	}
 
+	/**
+	 * 得到内边距
+	 * @return 内边距大小
+     */
 	public float getSuffixTextPadding() {
 		return suffixTextPadding;
 	}
 
+	/**
+	 * 设置内边距
+	 * @param suffixTextPadding 内边距大小
+     */
 	public void setSuffixTextPadding(float suffixTextPadding) {
 		this.suffixTextPadding = suffixTextPadding;
 		this.invalidate();
@@ -290,6 +422,11 @@ public class ArcProgress extends View {
 		return min_size;
 	}
 
+	/**
+	 * 测量
+	 * @param widthMeasureSpec 宽度
+	 * @param heightMeasureSpec 高度
+     */
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		rectF.set(strokeWidth / 2f, strokeWidth / 2f,
@@ -302,6 +439,7 @@ public class ArcProgress extends View {
 		setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
 	}
 
+	/** 绘画 */
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -342,6 +480,7 @@ public class ArcProgress extends View {
 		}
 	}
 
+	/** 保存当前界面上的值 */
 	@Override
 	protected Parcelable onSaveInstanceState() {
 		final Bundle bundle = new Bundle();
@@ -363,6 +502,7 @@ public class ArcProgress extends View {
 		return bundle;
 	}
 
+	/** 恢复之前保存的值 */
 	@Override
 	protected void onRestoreInstanceState(Parcelable state) {
 		if (state instanceof Bundle) {

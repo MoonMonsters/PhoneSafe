@@ -21,9 +21,14 @@ import edu.csuft.phonesafe.bean.TaskInfo;
  * Created by Chalmers on 2016-07-03 21:28.
  * email:qxinhai@yeah.net
  */
+
+/**
+ * 任务管理适配器
+ */
 public class TaskAdapter extends BaseAdapter {
 
     private ArrayList<TaskInfo> taskInfoList = null;
+    /** 上下文对象 */
     private Context context = null;
 
     public TaskAdapter(Context context, ArrayList<TaskInfo> taskInfoList){
@@ -31,30 +36,34 @@ public class TaskAdapter extends BaseAdapter {
         this.taskInfoList = taskInfoList;
     }
 
+    /** 集合数据个数 */
     @Override
     public int getCount() {
 
         return taskInfoList.size();
     }
 
+    /** 得到子项对象 */
     @Override
     public Object getItem(int position) {
 
         return taskInfoList.get(position);
     }
 
+    /** 无用 */
     @Override
     public long getItemId(int position) {
 
         return position;
     }
 
+    /** 得到View对象 */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolder viewHolder = null;
 
-        if(convertView == null){
+        if(convertView == null){    //如果View对象为空
             convertView = LayoutInflater.from(context).inflate(R.layout.item_task,parent,false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
@@ -62,6 +71,7 @@ public class TaskAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        //绑定数据
         viewHolder.bindData(taskInfoList.get(position));
 
         return convertView;
@@ -86,6 +96,10 @@ public class TaskAdapter extends BaseAdapter {
             super(view);
         }
 
+        /**
+         * 绑定数据
+         * @param obj 需要绑定数据对象
+         */
         @Override
         public void bindData(Object obj) {
             TaskInfo taskInfo = (TaskInfo) obj;

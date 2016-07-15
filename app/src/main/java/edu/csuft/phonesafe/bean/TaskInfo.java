@@ -6,6 +6,10 @@ import android.graphics.drawable.Drawable;
  * Created by Chalmers on 2016-07-03 21:21.
  * email:qxinhai@yeah.net
  */
+
+/**
+ * 任务管理界面需要用到的bean文件
+ */
 public class TaskInfo {
     /**
      * 图标

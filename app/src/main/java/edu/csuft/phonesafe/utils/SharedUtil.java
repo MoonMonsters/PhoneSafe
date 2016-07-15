@@ -7,6 +7,10 @@ import android.preference.PreferenceManager;
  * Created by Chalmers on 2016-07-12 14:10.
  * email:qxinhai@yeah.net
  */
+
+/**
+ * 轻量级存储工具类
+ */
 public class SharedUtil {
     /**
      * 获得设置界面中的数据
@@ -19,6 +23,7 @@ public class SharedUtil {
     public static Object getSavedDataFromSetting(Context context, String keyValue,
                                                  Object defaultValue) {
         Object result = null;
+        //如果传入的默认值是boolean类型
         if (defaultValue instanceof Boolean) {        //如果是Boolean类型
             result = PreferenceManager.getDefaultSharedPreferences(context)
                     .getBoolean(keyValue, (Boolean) defaultValue);

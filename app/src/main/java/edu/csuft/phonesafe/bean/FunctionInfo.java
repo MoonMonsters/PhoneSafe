@@ -4,6 +4,10 @@ package edu.csuft.phonesafe.bean;
  * Created by Chalmers on 2016-07-06 22:59.
  * email:qxinhai@yeah.net
  */
+
+/**
+ * 在主界面功能模块需要用到的bean对象
+ */
 public class FunctionInfo {
     /**
      * 功能对应图片

@@ -8,6 +8,11 @@ import android.os.Parcelable;
  * Created by Chalmers on 2016-07-06 23:35.
  * email:qxinhai@yeah.net
  */
+
+/**
+ * 在应用管理界面需要用到的bean对象，实现了Parcelabel接口，在Fragment中使用argument传递
+ * 数据时需要用到
+ */
 public class AppManagerInfo implements Comparable<AppManagerInfo>,Parcelable {
 
     /**

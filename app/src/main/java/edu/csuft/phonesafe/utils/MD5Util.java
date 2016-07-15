@@ -16,12 +16,13 @@ public class MD5Util {
 
     /**
      * 将密码转换成MD5保存
-     * @param pwd
-     * @return
+     * @param pwd 签名
+     * @return 将签名加密成md5格式
      */
     public static String getMD5FromStringPwd(String pwd){
         String md5Pwd = null;
         try {
+            //使用md5加密形式
             MessageDigest digest = MessageDigest.getInstance("MD5");
             byte[] bytes = digest.digest(pwd.getBytes());
             //转换成大整数

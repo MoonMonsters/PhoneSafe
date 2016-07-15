@@ -30,10 +30,15 @@ import edu.csuft.phonesafe.bean.AppManagerInfo;
 /**
  * A simple {@link Fragment} subclass.
  */
+
+/**
+ * 应用管理界面的Fragment，放到ViewPager中
+ */
 public class AppManagerFragment extends Fragment {
 
     @Bind(R.id.lv_fragment_app_manager)
     ListView lv_fragment_app_manager;
+    //弹出窗口
     PopupWindow popupWindow;
 
     /** 该应用是否为用户应用 */
@@ -44,8 +49,6 @@ public class AppManagerFragment extends Fragment {
     /** 应用程序管理适配器 */
     private AppManagerAdapter appManagerAdapter = null;
 
-
-
     public static final String FRAGMENT_LIST_VALUE = "fragment_list_value";
     public static final String IS_USER_APP = "is_user_app";
 
@@ -53,6 +56,7 @@ public class AppManagerFragment extends Fragment {
 
     }
 
+    /** 创建视图对象 */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,19 +64,23 @@ public class AppManagerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_app_manager, container, false);
         ButterKnife.bind(this,view);
 
+        //获得设置的数据
         Bundle bundle = getArguments();
 
         appManagerInfoList = bundle.getParcelableArrayList(FRAGMENT_LIST_VALUE);
         appManagerAdapter = new AppManagerAdapter(getActivity(),appManagerInfoList);
         lv_fragment_app_manager.setAdapter(appManagerAdapter);
 
+        //是否为用户应用
         isUserApp = bundle.getBoolean(IS_USER_APP);
 
+        //初始化监听器
         initListener();
 
         return view;
     }
 
+    /** 初始化监听器 */
     private void initListener(){
         lv_fragment_app_manager.setOnItemClickListener(onItemClickListener);
     }
@@ -83,8 +91,12 @@ public class AppManagerFragment extends Fragment {
      */
     public static AppManagerFragment getInstance(ArrayList<AppManagerInfo> appManagerInfoList, boolean isUserAppFlag){
 
+        //创建Fragment对象
         AppManagerFragment fragment = new AppManagerFragment();
 
+        //设置传递数据
+        //将数据通过setArguments保存，在创建界面时再取出
+        //因为不推荐使用new Fragment(Object)方法
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(FRAGMENT_LIST_VALUE,appManagerInfoList);
         bundle.putBoolean(IS_USER_APP,isUserAppFlag);
@@ -99,6 +111,7 @@ public class AppManagerFragment extends Fragment {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             View v = LayoutInflater.from(getActivity()).inflate(R.layout.item_app_manager_dialog,null,false);
+            //设置弹出窗口的位置
             popupWindow = new PopupWindow(v, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             popupWindow.setTouchable(true);
             int[] arrayOfInt = new int[2];
@@ -120,11 +133,15 @@ public class AppManagerFragment extends Fragment {
         Button btn_app_manager_popup_uninstall = (Button) v.findViewById(R.id.btn_app_manager_popup_uninstall);
         Button btn_app_manager_popup_share = (Button) v.findViewById(R.id.btn_app_manager_popup_share);
 
+        /*
+        设置弹出窗口中的按钮的监听器
+         */
         btn_app_manager_popup_startup.setOnClickListener(onClickListener);
         btn_app_manager_popup_uninstall.setOnClickListener(onClickListener);
         btn_app_manager_popup_share.setOnClickListener(onClickListener);
     }
 
+    /** 弹出窗口的点击事件*/
     private class PopupOnClickListener implements View.OnClickListener{
 
         private int position;
@@ -137,6 +154,7 @@ public class AppManagerFragment extends Fragment {
         public void onClick(View v) {
             AppManagerInfo info = appManagerInfoList.get(position);
 
+            //包管理器
             PackageManager pm = getActivity().getPackageManager();
             //包名
             String packageName = info.getPackageName();

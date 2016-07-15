@@ -19,50 +19,73 @@ import edu.csuft.phonesafe.bean.VirusAppInfo;
  * Created by Chalmers on 2016-07-07 18:28.
  * email:qxinhai@yeah.net
  */
+
+/**
+ * 病毒查杀界面
+ */
 public class VirusAdapter extends BaseAdapter {
 
     private ArrayList<VirusAppInfo> virusAppInfoList = null;
+    /**
+     * 上下文对象
+     */
     private Context context = null;
 
-    public VirusAdapter(Context context, ArrayList<VirusAppInfo> virusAppInfoList){
+    public VirusAdapter(Context context, ArrayList<VirusAppInfo> virusAppInfoList) {
         this.context = context;
         this.virusAppInfoList = virusAppInfoList;
     }
 
+    /**
+     * 集合数据个数
+     */
     @Override
     public int getCount() {
         return virusAppInfoList.size();
     }
 
+    /**
+     * 子项对象
+     */
     @Override
     public Object getItem(int position) {
         return virusAppInfoList.get(position);
     }
 
+    /**
+     * 无用
+     */
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+    /**
+     * 得到View对象
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
 
-        if(convertView == null){
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_virus,parent,false);
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_virus, parent, false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
-        }else{
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        //绑定数据
         viewHolder.bindData(virusAppInfoList.get(position));
 
 
         return convertView;
     }
 
-    class ViewHolder extends BaseViewHolder{
+    /**
+     * 帮助类
+     */
+    class ViewHolder extends BaseViewHolder {
 
         @Bind(R.id.iv_virus_icon)
         ImageView iv_virus_icon;
@@ -78,6 +101,11 @@ public class VirusAdapter extends BaseAdapter {
             super(view);
         }
 
+        /**
+         * 绑定数据
+         *
+         * @param obj 需要绑定的对象
+         */
         @Override
         public void bindData(Object obj) {
             VirusAppInfo info = (VirusAppInfo) obj;

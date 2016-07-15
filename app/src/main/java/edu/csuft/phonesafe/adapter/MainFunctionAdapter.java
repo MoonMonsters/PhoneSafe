@@ -19,9 +19,15 @@ import edu.csuft.phonesafe.bean.FunctionInfo;
  * Created by Chalmers on 2016-07-06 22:59.
  * email:qxinhai@yeah.net
  */
+
+/**
+ * 主界面的GridView的适配器
+ */
 public class MainFunctionAdapter extends BaseAdapter {
 
+    /** 集合 */
     private ArrayList<FunctionInfo> functionInfoList = null;
+    /** 上下文对象 */
     private Context context;
 
     public MainFunctionAdapter(Context context, ArrayList<FunctionInfo> functionInfoList){
@@ -29,26 +35,34 @@ public class MainFunctionAdapter extends BaseAdapter {
         this.functionInfoList = functionInfoList;
     }
 
+    /** 集合数据个数 */
     @Override
     public int getCount() {
         return functionInfoList.size();
     }
 
+    /**
+     * 子项位置
+     * @param position 位置
+     * @return 子项对象
+     */
     @Override
     public Object getItem(int position) {
         return functionInfoList.get(position);
     }
 
+    /** 无用 */
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+    /** 创建View对象 */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolder viewHolder = null;
-        if(convertView == null){
+        if(convertView == null){    //如果View对象为空
             convertView = LayoutInflater.from(context).inflate(R.layout.item_main_function,parent,false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
@@ -56,6 +70,7 @@ public class MainFunctionAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        //绑定数据
         viewHolder.bindData(functionInfoList.get(position));
 
         return convertView;
@@ -76,6 +91,7 @@ public class MainFunctionAdapter extends BaseAdapter {
             super(view);
         }
 
+        /** 绑定数据 */
         @Override
         public void bindData(Object obj) {
             FunctionInfo info = (FunctionInfo) obj;

@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
  */
 
 /**
- * 流量信息的JavaBean
+ * 流量信息的JavaBean，实现了Comparable接口，用来使用系统方法进行排序
  */
 public class TrafficInfo implements Comparable{
     /** app图标 */
@@ -74,12 +74,18 @@ public class TrafficInfo implements Comparable{
         this.trafficTotal = trafficTotal;
     }
 
+    /**
+     * 按从大到小的顺序排序
+     * @param another 另一个对象
+     * @return 排序结果
+     */
     @Override
     public int compareTo(Object another) {
 
         TrafficInfo that = (TrafficInfo)another;
 
         int result = 0;
+        //排序结果
         if(this.trafficTotal < that.getTrafficTotal()){
             result = 1;
         }else{
