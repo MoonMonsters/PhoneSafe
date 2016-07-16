@@ -64,7 +64,8 @@
             android:name=".activity.SettingActivity"
             android:label="设置中心"
             android:parentActivityName=".activity.MainActivity" />
-        <activity android:name=".activity.SplashActivity"
+        <activity
+            android:name=".activity.SplashActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -72,6 +73,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.AppDetailsActivity"
+            android:label="详细内容"
+            android:parentActivityName=".activity.AppManagerActivity" />
     </application>
 
 </manifest>

@@ -101,7 +101,7 @@ public class AppManagerActivity extends BaseActivity {
     @Override
     public void initData() {
         //初始化进度条的相关信息
-        viewHelper = new ViewHelper(this);
+        viewHelper = new ViewHelper(AppManagerActivity.this);
         systemAppList = new ArrayList<>();
         userAppList = new ArrayList<>();
         fragmentList = new ArrayList<>();

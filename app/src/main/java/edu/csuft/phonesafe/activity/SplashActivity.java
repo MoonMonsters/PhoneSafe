@@ -37,7 +37,7 @@ public class SplashActivity extends BaseActivity {
         } else {  //不需要联网更新
             delayToEnterMainActivity();
         }
-
+//android.permission.GET_PACKAGE_SIZE
 //        try {
 //            String[] permissions = getPackageManager().getPackageInfo(getPackageName(), PackageManager.PERMISSION_DENIED).requestedPermissions;
 //            if(permissions != null && permissions.length != 0){

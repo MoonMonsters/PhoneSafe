@@ -40,7 +40,9 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
      * 所有的子项集合，即字项集合的集合
      */
     private ArrayList<ArrayList<CCleanerChildInfo>> allChildInfoList = null;
-    /** 上下文对象 */
+    /**
+     * 上下文对象
+     */
     private Context context = null;
 
     public CCleanerAdapter(Context context, ArrayList<CCleanerParentInfo> parentInfoList,
@@ -110,7 +112,9 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
-    /** 设置父项的显示数据View对象 */
+    /**
+     * 设置父项的显示数据View对象
+     */
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 
@@ -135,7 +139,9 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
-    /** 获得子项的显示的View对象 */
+    /**
+     * 获得子项的显示的View对象
+     */
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         ChildViewHolder viewHolder = null;
@@ -243,6 +249,7 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
 
         /**
          * 绑定数据
+         *
          * @param obj 需要绑定数据类型对象
          */
         @Override
@@ -345,7 +352,9 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
             //flag表示父项当前的选中状态，即显示的图片类型
             setSelectedItem(flag, position, false);
 
-            Log.i("TAG","parentInfo.getValue = " + parentInfo.getValue());
+            Log.i("TAG", "parentInfo.getValue = " + parentInfo.getValue());
+
+            sendBroadcast(childInfo.isSelected() ? childInfo.getValue() : -childInfo.getValue());
 
             //刷新界面
             CCleanerAdapter.this.notifyDataSetChanged();
@@ -357,7 +366,9 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
      */
     private class IVListener implements View.OnClickListener {
 
-        /** 父项对象 */
+        /**
+         * 父项对象
+         */
         private CCleanerParentInfo parentInfo = null;
 
         public IVListener(CCleanerParentInfo parentInfo) {
@@ -367,7 +378,7 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
         @Override
         public void onClick(View v) {
 
-            Log.i("TAG",""+parentInfo.getType());
+            Log.i("TAG", "" + parentInfo.getType());
 
             //得到当前的状态
             boolean select = parentInfo.isSelect();
@@ -400,12 +411,12 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
         CCleanerParentInfo parentInfo = parentInfoList.get(position);
         //如果是需要改变子项的选中状态
         if (isSelectedAll) {
-            Log.i("TAG","Before:parentInfo.getValue = " + parentInfo.getValue());
+            Log.i("TAG", "Before:parentInfo.getValue = " + parentInfo.getValue());
             //得到该父项下所有子项
             //因为父项的position对于着子项集合中的position个位置的子项
             ArrayList<CCleanerChildInfo> childInfoList = allChildInfoList.get(position);
             //全部设置成跟父项相同的状态
-            Log.i("TAG","childInfoList.size() = " + childInfoList.size());
+            Log.i("TAG", "childInfoList.size() = " + childInfoList.size());
             for (int i = 0; i < childInfoList.size(); i++) {
                 //得到子项对象
                 CCleanerChildInfo childInfo = childInfoList.get(i);
@@ -422,12 +433,12 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
                         totalSize += childInfo.getValue();
                     }
                 } else {    //如果当前的父项是未选中状态，则累加所有子项的值
-                    if(childInfo.isSelected()){
+                    if (childInfo.isSelected()) {
                         totalSize += childInfo.getValue();
                     }
                 }
 
-                Log.i("TAG","size = " + totalSize);
+                Log.i("TAG", "size = " + totalSize);
                 //将子项的选中状态改成和父项相同
                 childInfo.setSelected(select);
             }
@@ -440,11 +451,11 @@ public class CCleanerAdapter extends BaseExpandableListAdapter {
         if (!select) {
             totalSize = -totalSize;
         }
-        Log.i("TAG","totalSize = " + totalSize);
+        Log.i("TAG", "totalSize = " + totalSize);
         //改变父项的显示的值
         parentInfo.setValue(parentInfo.getValue() + totalSize);
 
-        Log.i("TAG","After:parentInfo.getValue = " + parentInfo.getValue());
+        Log.i("TAG", "After:parentInfo.getValue = " + parentInfo.getValue());
 
         sendBroadcast(totalSize);
     }

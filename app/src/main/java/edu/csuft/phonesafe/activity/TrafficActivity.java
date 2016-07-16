@@ -98,7 +98,6 @@ public class TrafficActivity extends BaseActivity {
         //得到总流量数据
         //总数据流量由总的上传流量加上总的下载流量组成
         long totalTrafficValue = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes();
-
         //转换格式
         String strValue = Formatter.formatFileSize(this, totalTrafficValue);
 
